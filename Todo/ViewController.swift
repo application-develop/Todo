@@ -48,6 +48,25 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         }
     }
     
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath){
+        
+        if editingStyle == UITableViewCell.EditingStyle.delete{
+            todoList.remove(at: indexPath.row)
+            
+            tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
+            
+            do {
+                let data: Data = try NSKeyedArchiver.archivedData(withRootObject: todoList, requiringSecureCoding: true)
+                
+                let userDefaults = UserDefaults.standard
+                userDefaults.set(data, forKey: "todoList")
+                userDefaults.synchronize()
+            } catch {
+                //エラー処理無し
+            }
+        }
+    }
+    
     
     
     var todoList = [MyTodo]()
